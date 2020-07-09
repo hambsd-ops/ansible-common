@@ -1,0 +1,47 @@
+---
+- name: include nrpe platform vars
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/{{ ansible_os_family }}.yml"
+- name: install nrpe package for OpenBSD
+  openbsd_pkg:
+    name: nrpe--
+    state: present
+  when: ansible_distribution == 'OpenBSD'
+- name: install nrpe for Debian
+  apt:
+    name:
+    - nagios-nrpe-server
+    - monitoring-plugins
+    update_cache: true
+    cache_valid_time: 86400
+    state: present
+  when: ansible_os_family == 'Debian'
+- name: set allowed hosts for nrpe
+  lineinfile:
+    path: "{{ nrpe_cfg_file }}"
+    regexp: "^#?allowed_hosts="
+    line: "allowed_hosts={{ groups['nagios'] | map('extract', hostvars, ['vmip4']) | join(',') }}"
+    state: present
+  notify: restart nrpe
+- name: add hardcoded commands for Debian
+  blockinfile:
+    path: "{{ nrpe_cfg_file }}"
+    block: |
+      command[check_disk]=/usr/lib/nagios/plugins/check_disk -w 30% -c 20%
+      command[check_swap]=/usr/lib/nagios/plugins/check_swap -w 50% -c 20% --no-swap=ok
+  notify: restart nrpe
+  when: ansible_distribution == 'Debian'
+- name: add hardcoded commands for OpenBSD
+  blockinfile:
+    path: "{{ nrpe_cfg_file }}"
+    block: |
+      command[check_swap]=/usr/local/libexec/nagios/check_swap -w 50% -c 20% --no-swap=ok
+  notify: restart nrpe
+  when: ansible_distribution == 'OpenBSD'
+- name: enable nrpe and start
+  service:
+    name: "{{ nrpe_service }}"
+    state: started
+    enabled: yes

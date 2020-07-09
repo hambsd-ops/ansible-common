@@ -1,0 +1,14 @@
+---
+- name: retrieve ike host key
+  fetch:
+    src: "/etc/iked/local.pub"
+    dest: "files/ike_host_keys/{{ inventory_hostname }}"
+    flat: yes
+- name: copy ike host keys
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/iked/pubkeys/fqdn/"
+    owner: root
+    group: wheel
+    mode: 0644
+  with_fileglob: "ike_host_keys/*"

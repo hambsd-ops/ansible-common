@@ -1,0 +1,31 @@
+---
+- name: timezone setup
+  import_tasks: 'timezone.yml'
+
+- name: backuppc setup
+  import_tasks: 'backuppc.yml'
+
+- name: sudo setup
+  import_tasks: 'sudo.yml'
+  when: ansible_distribution == "Debian"
+
+- name: doas setup
+  import_tasks: 'doas.yml'
+  when: ansible_distribution == "OpenBSD"
+
+- name: user accounts setup
+  import_tasks: 'users.yml'
+
+- name: nrpe setup
+  import_tasks: 'nrpe.yml'
+
+- name: ssh server setup
+  import_tasks: 'ssh_server.yml'
+
+- name: ipsec setup
+  import_tasks: 'ipsec.yml'
+  when: ansible_distribution == "OpenBSD"
+
+- name: openbsd services setup
+  import_tasks: 'services_openbsd.yml'
+  when: ansible_distribution == "OpenBSD"

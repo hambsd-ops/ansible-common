@@ -1,0 +1,9 @@
+---
+- name: reload sshd
+  service:
+    name: sshd
+    state: reloaded
+- name: restart nrpe
+  service:
+    name: "{{ nrpe_service }}"
+    state: restarted

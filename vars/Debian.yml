@@ -1,0 +1,3 @@
+---
+nrpe_cfg_file: "/etc/nagios/nrpe.cfg"
+nrpe_service: "nagios-nrpe-server.service"
