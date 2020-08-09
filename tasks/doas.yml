@@ -1,8 +1,4 @@
 ---
-- name: check distribution is supported for doas
-  assert:
-    that: ansible_distribution == 'OpenBSD'
-    fail_msg: 'doas is only supported for OpenBSD'
 - name: install doas.conf
   template:
     src: "doas.conf.j2"

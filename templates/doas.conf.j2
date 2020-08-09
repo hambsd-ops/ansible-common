@@ -1,5 +1,5 @@
 permit nopass :wheel
 permit nopass keepenv root
-{% for group in server_service_owner_groups %}
+{% for group in hambsd_service_groups %}
 permit nopass :{{ group }} as {{ group }}
 {% endfor %}

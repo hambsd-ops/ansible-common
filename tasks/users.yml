@@ -2,34 +2,26 @@
 - name: create users
   user:
     name: "{{ item }}"
-    password: '*************'
-  with_items: "{{ server_users }}"
+    password: "{{ hambsd_passwords[item] | default('*************') }}"
+  with_items: "{{ hambsd_users + hambsd_operators }}"
 - name: ensure users are in correct primary group
   user:
     name: "{{ item }}"
     group: "{{ item }}"
-  with_items: "{{ server_users }}"
-- name: add operators to wheel for OpenBSD
+  with_items: "{{ hambsd_users + hambsd_operators }}"
+- name: add operators to wheel
   user:
     name: "{{ item }}"
     groups: wheel
     append: yes
-  with_items: "{{ server_operators }}"
-  when: ansible_distribution == 'OpenBSD'
-- name: add operators to adm, staff and sudo for Debian
-  user:
-    name: "{{ item }}"
-    groups: ['adm', 'staff', 'sudo']
-    append: yes
-  with_items: "{{ server_operators }}"
-  when: ansible_distribution == 'Debian'
+  with_items: "{{ hambsd_operators }}"
 - name: set up authorized keys
   authorized_key:
     user: "{{ item }}"
     state: present
     exclusive: yes
     key: "{{ lookup('file', 'ssh_user_keys/' + item) }}"
-  with_items: "{{ server_users }}"
+  with_items: "{{ hambsd_users + hambsd_operators }}"
 - name: disable root password
   user:
     name: root

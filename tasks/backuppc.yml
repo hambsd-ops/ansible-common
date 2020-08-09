@@ -11,16 +11,8 @@
       state: present
       exclusive: yes
       key: "{{ lookup('file', 'ssh_user_keys/backuppc') }}"
-  - name: install rsync for backuppc for Debian
-    apt:
-      name: "rsync"
-      update_cache: true
-      cache_valid_time: 86400
-      state: present
-    when: ansible_os_family == 'Debian'
-  - name: install rsync for backuppc for OpenBSD
+  - name: install rsync for backuppc
     openbsd_pkg:
       name: rsync--
       state: present
-    when: ansible_distribution == 'OpenBSD'
   when: backuppc_ssh_key_file.stat.exists

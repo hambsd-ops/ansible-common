@@ -1,0 +1,5 @@
+---
+- name: "install packages: {{ hambsd_packages | join(', ') }}"
+  openbsd_pkg:
+    name: "{{ hambsd_packages }}"
+    state: present

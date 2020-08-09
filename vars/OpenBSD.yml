@@ -1,3 +1,0 @@
----
-nrpe_cfg_file: "/etc/nrpe.cfg"
-nrpe_service: "nrpe"

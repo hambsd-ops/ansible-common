@@ -1,5 +1,6 @@
 ---
-server_operators: ['irl']
-server_users: ['irl']
-server_service_owner_groups: []
-server_timezone: 'UTC'
+hambsd_packages: []
+hambsd_operators: ['irl']
+hambsd_service_groups: []
+hambsd_timezone: 'UTC'
+hambsd_users: []
